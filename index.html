@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Столиці Америки</title>
+    <style>
+        @import url('https://fonts.cdnfonts.com/css/bauhaus-93');
+        body {
+            background-color: #f6b73c;
+            color: #fff;
+            font-family: Arial, sans-serif;
+        }
+
+        h1 {
+            font-size: 36px;
+            text-align: center;
+            margin-top: 40px;
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 40px;
+            text-align: center;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        button {
+            
+            background-color: #fff;
+            color: #f6b73c;
+            font-size: 54px;
+            padding: 60px 120px;
+            border: none;
+            border-radius: 10px;
+            margin-right: 20px;
+            margin-bottom: 40px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #f6b73c;
+            color: #fff;
+        }
+
+        input {
+            text-align: center;
+            font-size: 40px;
+            padding: 60px;
+           
+            border: none;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        input:focus {
+            
+            outline: none;
+        }
+
+        #credit {
+            position: center;
+            bottom: 10px;
+            right: 10px;
+            font-family: 'Bauhaus 93', sans-serif;
+            font-size: 40px;
+        }
+    </style>
+</head>
+<div id="credit">created by Artem Kinash</div>
+
+<body>
+    <h1>Столиці Америки</h1>
+    <p>Виберіть регіон:</p>
+    <button id="north-btn">Північна Америка</button>
+    <button id="south-btn">Південна Америка</button>
+    <p id="question"></p>
+    <input type="text" id="answer" placeholder="Введіть столицю" />
+
+    <script>
+        const northCapitals = {
+            "Канада": "Оттава",
+            "США": "Вашингтон",
+            "Мексика": "Мехіко",
+            "Беліз": "Бельмопан",
+            "Ґватемала": "Ґватемала",
+            "Панама": "Панама",
+            "Гондурас": "Теґусіґальпа",
+            "Коста-Рика": "Сан-Хосе",
+            "Нікараґуа": "Манаґуа",
+            "Сальвадор": "Сан-Сальвадор",
+            "Антиґуа і Барбуда": "Сент-Джонс",
+            "Багамські Острови": "Нассау",
+            "Барбадос": "Бриджтаун",
+            "Ґренада": "Сент-Джорджес",
+            "Домініка": "Розо",
+            "Домініканська Республіка": "Санто-Домінґо",
+            "Куба": "Гавана",
+            "Гаїті": "Порт-о-Пренс",
+            "Сент-Вінсент і Ґренадини": "Кінґстаун",
+            "Сент-Кітс і Невіс": "Бастер",
+            "Сент-Люсія": "Кастрі",
+            "Тринідад і Тобаґо": "Порт-оф-Слейн",
+            "Ямайка": "Кінґстон",
+        };
+
+        const southCapitals = {
+            "Аргентина": "Буенос-Айрес",
+            "Бразилія": "Бразиліа",
+            "Чилі": "Сантьяго",
+            "Ґайана": "Джорджтаун",
+            "Колумбія": "Боґота",
+            "Перу": "Ліма",
+            "Уруґвай": "Монтевідео",
+            "Болівія": "Сукре",
+            "Венесуела": "Каракас",
+            "Параґвай": "Асунсьйон",
+            "Еквадор": "Кіто",
+            "Суринам": "Парамарибо",
+        };
+
+        let region;
+        let country;
+        let capital;
+        let correctAnswers = 0;
+        let incorrectAnswers = 0;
+
+        const questionEl = document.getElementById("question");
+        const answerEl = document.getElementById("answer");
+        const northBtn = document.getElementById("north-btn");
+        const southBtn = document.getElementById("south-btn");
+
+        northBtn.addEventListener("click", function () {
+            region = "Північна Америка";
+            playGame();
+        });
+
+        southBtn.addEventListener("click", function () {
+            region = "Південна Америка";
+            playGame();
+        });
+
+        function playGame() {
+            if (region === "Північна Америка") {
+                const entries = Object.entries(northCapitals);
+                if (entries.length === 0) {
+                    alert("Ви відповіли на всі запитання для цього регіону!");
+                    return;
+                }
+                const randomIndex = Math.floor(Math.random() * entries.length);
+                [country, capital] = entries[randomIndex];
+                delete northCapitals[country];
+            } else if (region === "Південна Америка") {
+                const entries = Object.entries(southCapitals);
+                if (entries.length === 0) {
+                    alert("Ви відповіли на всі запитання для цього регіону!");
+                    return;
+                }
+                const randomIndex = Math.floor(Math.random() * entries.length);
+                [country, capital] = entries[randomIndex];
+                delete southCapitals[country];
+            }
+
+            questionEl.textContent = `Яка столиця у країни ${country}?`;
+            answerEl.value = "";
+            answerEl.focus();
+            answerEl.addEventListener("keydown", handleKeyDown);
+        }
+
+        function handleKeyDown(e) {
+            if (e.key === "Enter") {
+                answerEl.removeEventListener("keydown", handleKeyDown);
+                checkAnswer(capital);
+            }
+        }
+
+        function checkAnswer(capital) {
+            const playerAnswer = answerEl.value.trim().toLowerCase();
+
+            if (playerAnswer === capital.toLowerCase()) {
+                correctAnswers++;
+                alert("Правильно!");
+            } else {
+                incorrectAnswers++;
+                alert(`Неправильно. Правильна відповідь: ${capital}.`);
+            }
+
+            if (region === "Північна Америка") {
+                if (Object.keys(northCapitals).length === 0) {
+                    alert(
+                        `Ви відповіли на всі запитання для регіону ${region}! Кількість правильних відповідей: ${correctAnswers}. Кількість неправильних відповідей: ${incorrectAnswers}.`
+                    );
+                    return;
+                }
+            } else if (region === "Південна Америка") {
+                if (Object.keys(southCapitals).length === 0) {
+                    alert(
+                        `Ви відповіли на всі запитання для регіону ${region}! Кількість правильних відповідей: ${correctAnswers}. Кількість неправильних відповідей: ${incorrectAnswers}.`
+                    );
+                    return;
+                }
+            }
+
+            playGame();
+        }
+    </script>
+</body>
+
+</html>
